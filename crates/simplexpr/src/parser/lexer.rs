@@ -223,7 +223,7 @@ impl<'s> Lexer<'s> {
                 let segment_ender = self.advance_until_unescaped_one_of(&[STR_INTERPOLATION_START, &quote])?;
                 let lit_content = &self.source[segment_start + quote.len()..self.pos - segment_ender.len()];
                 // will return the original string on any unescaping failure
-                let lit_content = unescape::unescape(lit_content).unwrap_or_else(|| lit_content.to_string());
+                let lit_content = unescaper::unescape(lit_content).unwrap_or_else(|_| lit_content.to_string());
                 elements.push((segment_start + self.offset, StrLitSegment::Literal(lit_content), self.pos + self.offset));
 
                 if segment_ender == STR_INTERPOLATION_START {
